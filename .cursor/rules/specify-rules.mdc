@@ -1,0 +1,25 @@
+﻿# plantvs Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2025-10-08
+
+## Active Technologies
+- JavaScript ES6+ (原生JavaScript，无需编译) + Bootstrap 5 (通过CDN引入，仅用于UI组件和响应式布局) (001-plantsvszombies-3)
+
+## Project Structure
+```
+backend/
+frontend/
+tests/
+```
+
+## Commands
+npm test; npm run lint
+
+## Code Style
+JavaScript ES6+ (原生JavaScript，无需编译): Follow standard conventions
+
+## Recent Changes
+- 001-plantsvszombies-3: Added JavaScript ES6+ (原生JavaScript，无需编译) + Bootstrap 5 (通过CDN引入，仅用于UI组件和响应式布局)
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
