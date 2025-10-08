@@ -1,0 +1,54 @@
+# Netlify Configuration for Plants vs Zombies Game
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # Publish directory (root directory for static site)
+  publish = "."
+  
+  # No build command needed (static site)
+  command = ""
+
+# Headers for caching and performance
+[[headers]]
+  # Apply to all routes
+  for = "/*"
+  [headers.values]
+    # Cache for 1 hour by default
+    Cache-Control = "public, max-age=3600"
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache JavaScript files for 1 year (with content hashing)
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache CSS files for 1 year
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache HTML with shorter duration (allow updates)
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# SPA redirect (optional - keeps all routes on index.html)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+
+# Error pages (optional)
+[[redirects]]
+  from = "/404"
+  to = "/index.html"
+  status = 404
+
