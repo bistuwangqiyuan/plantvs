@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>游戏调试工具</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+        }
+        .section {
+            background: #252526;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #007acc;
+        }
+        .error { border-left-color: #f48771; }
+        .success { border-left-color: #89d185; }
+        .warning { border-left-color: #dcdcaa; }
+        h2 { margin-top: 0; }
+        pre { background: #1e1e1e; padding: 10px; overflow-x: auto; }
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        button:hover { background: #1177bb; }
+    </style>
+</head>
+<body>
+    <h1>🐛 游戏调试控制台</h1>
+    
+    <div class="section">
+        <h2>快速诊断</h2>
+        <button onclick="runDiagnostics()">🔍 运行诊断</button>
+        <button onclick="testGame()">🎮 测试游戏链接</button>
+        <button onclick="checkFiles()">📁 检查文件</button>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `section ${type}`;
+            div.innerHTML = `<pre>${message}</pre>`;
+            results.appendChild(div);
+        }
+        
+        function runDiagnostics() {
+            document.getElementById('results').innerHTML = '';
+            
+            log('开始诊断游戏...', 'info');
+            
+            // 测试1: 检查必需文件
+            const requiredFiles = [
+                'index.html',
+                'styles.css',
+                'game.js',
+                'entities.js',
+                'levels.js',
+                'ui.js',
+                'storage.js',
+                'utils.js'
+            ];
+            
+            log('检查必需文件...', 'info');
+            
+            requiredFiles.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        if (response.ok) {
+                            log(`✅ ${file} - 存在 (${response.headers.get('content-length')} bytes)`, 'success');
+                        } else {
+                            log(`❌ ${file} - 不存在 (${response.status})`, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        log(`❌ ${file} - 加载失败: ${error.message}`, 'error');
+                    });
+            });
+            
+            // 测试2: 检查JavaScript加载
+            setTimeout(() => {
+                log('\\n检查JavaScript对象...', 'info');
+                
+                const checks = [
+                    { name: 'GAME_CONSTANTS', obj: typeof GAME_CONSTANTS !== 'undefined' },
+                    { name: 'PlantType', obj: typeof PlantType !== 'undefined' },
+                    { name: 'ZombieType', obj: typeof ZombieType !== 'undefined' },
+                    { name: 'Storage', obj: typeof Storage !== 'undefined' },
+                    { name: 'LEVELS', obj: typeof LEVELS !== 'undefined' },
+                    { name: 'GameEngine', obj: typeof GameEngine !== 'undefined' },
+                    { name: 'Plant', obj: typeof Plant !== 'undefined' },
+                    { name: 'Zombie', obj: typeof Zombie !== 'undefined' }
+                ];
+                
+                checks.forEach(check => {
+                    if (check.obj) {
+                        log(`✅ ${check.name} - 已定义`, 'success');
+                    } else {
+                        log(`❌ ${check.name} - 未定义（可能脚本未加载）`, 'error');
+                    }
+                });
+            }, 1000);
+            
+            // 测试3: 浏览器支持
+            setTimeout(() => {
+                log('\\n检查浏览器支持...', 'info');
+                
+                const canvas = document.createElement('canvas');
+                const hasCanvas = !!canvas.getContext;
+                const hasLocalStorage = !!window.localStorage;
+                const hasRAF = !!window.requestAnimationFrame;
+                
+                log(`Canvas 2D: ${hasCanvas ? '✅ 支持' : '❌ 不支持'}`, hasCanvas ? 'success' : 'error');
+                log(`localStorage: ${hasLocalStorage ? '✅ 支持' : '❌ 不支持'}`, hasLocalStorage ? 'success' : 'error');
+                log(`requestAnimationFrame: ${hasRAF ? '✅ 支持' : '❌ 不支持'}`, hasRAF ? 'success' : 'error');
+            }, 1500);
+        }
+        
+        function testGame() {
+            log('打开游戏页面进行测试...', 'info');
+            window.open('https://plantvs.netlify.app', '_blank');
+            
+            log('\\n请在新标签页中进行以下测试:', 'warning');
+            log('1. 点击"开始游戏"按钮\\n2. 选择关卡1\\n3. 观察是否有控制台错误（F12）\\n4. 尝试种植植物\\n5. 观察僵尸是否出现', 'info');
+        }
+        
+        function checkFiles() {
+            log('检查本地文件结构...', 'info');
+            fetch('/')
+                .then(r => r.text())
+                .then(html => {
+                    if (html.includes('植物大战僵尸')) {
+                        log('✅ index.html 正确加载', 'success');
+                    } else {
+                        log('❌ index.html 可能有问题', 'error');
+                    }
+                });
+        }
+    </script>
+</body>
+</html>
+
