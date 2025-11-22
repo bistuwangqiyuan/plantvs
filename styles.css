@@ -1,0 +1,534 @@
+/* ========================================
+   CSS Reset and Base Styles
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #87CEEB;
+}
+
+/* ========================================
+   CSS Custom Properties (Color Palette)
+   ======================================== */
+
+:root {
+    --background-color: #87CEEB;
+    --grid-line: #D3D3D3;
+    --grid-highlight: #FFFF00;
+    
+    --plant-sunflower: #FFD700;
+    --plant-peashooter: #228B22;
+    --plant-wallnut: #8B4513;
+    --plant-cherry: #DC143C;
+    --plant-snowpea: #87CEEB;
+    
+    --zombie-normal: #8B8B8B;
+    --zombie-damaged: #FF0000;
+    
+    --sun-color: #FFFF00;
+    
+    --ui-text: #000000;
+    --ui-background: rgba(255, 255, 255, 0.9);
+    --ui-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   Main Game Container
+   ======================================== */
+
+.game-container {
+    width: 100%;
+    max-width: 500px;
+    height: 100vh;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+}
+
+#gameCanvas {
+    border: 2px solid #333;
+    background: #87CEEB;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    touch-action: none;
+}
+
+/* ========================================
+   Loading Screen
+   ======================================== */
+
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+}
+
+.loading-content h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.loading-content .progress {
+    height: 30px;
+    background-color: rgba(255,255,255,0.3);
+}
+
+.loading-content p {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+}
+
+/* ========================================
+   Overlay Menus
+   ======================================== */
+
+.overlay-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.menu-content {
+    background: var(--ui-background);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px var(--ui-shadow);
+    text-align: center;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+}
+
+.game-title {
+    font-size: 2.5rem;
+    color: #2d5016;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    margin-bottom: 2rem;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.menu-buttons button {
+    min-width: 250px;
+    font-size: 1.2rem;
+    padding: 0.8rem 1.5rem;
+}
+
+/* Victory/Defeat Screens */
+.victory h1 {
+    color: #28a745;
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.defeat h1 {
+    color: #dc3545;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.defeat-message {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.stats-container {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin: 1.5rem 0;
+}
+
+.stats-container p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+}
+
+/* ========================================
+   Level Select
+   ======================================== */
+
+.level-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.level-card {
+    background: white;
+    border: 3px solid #ddd;
+    border-radius: 10px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.level-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.level-card.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f0f0f0;
+}
+
+.level-card.locked::after {
+    content: '🔒';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+}
+
+.level-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2d5016;
+}
+
+.level-name {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+}
+
+.level-difficulty {
+    color: #ffc107;
+    font-size: 1.2rem;
+}
+
+/* ========================================
+   Modals
+   ======================================== */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 15px;
+    max-width: 90%;
+    max-height: 90%;
+    width: 500px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    background: #2d5016;
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.btn-close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.modal-body h4 {
+    color: #2d5016;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-body p, .modal-body ul, .modal-body ol {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+/* Plant Almanac Grid */
+.plant-almanac-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.plant-almanac-card {
+    background: #f8f9fa;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.plant-almanac-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.plant-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.plant-name {
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
+
+.plant-cost {
+    color: #ffc107;
+    font-size: 0.9rem;
+}
+
+.plant-cooldown {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+/* Plant Detail */
+.plant-detail-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.plant-detail-icon {
+    font-size: 5rem;
+    margin: 1rem 0;
+}
+
+.plant-stats-table {
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.plant-stats-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.plant-stats-table td:first-child {
+    font-weight: bold;
+    color: #2d5016;
+}
+
+.plant-description {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+/* ========================================
+   Landscape Warning
+   ======================================== */
+
+.landscape-warning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+}
+
+.landscape-content {
+    text-align: center;
+    color: white;
+    padding: 2rem;
+}
+
+.landscape-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.landscape-content p {
+    font-size: 1.2rem;
+}
+
+/* ========================================
+   Tooltip
+   ======================================== */
+
+.tooltip-popup {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    z-index: 1000;
+    pointer-events: none;
+    max-width: 250px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.tooltip-popup::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(0, 0, 0, 0.9);
+}
+
+/* ========================================
+   Responsive Design - Mobile
+   ======================================== */
+
+@media (max-width: 768px) {
+    .game-container {
+        max-width: 100%;
+    }
+    
+    .game-title {
+        font-size: 2rem;
+    }
+    
+    .menu-buttons button {
+        min-width: 200px;
+        font-size: 1rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+    }
+    
+    .plant-almanac-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+    
+    .level-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Touch optimization */
+button, .level-card, .plant-almanac-card {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Prevent text selection during gameplay */
+.game-container {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.menu-content {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.level-card:not(.locked):hover {
+    animation: pulse 0.5s ease-in-out;
+}
+

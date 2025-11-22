@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>植物大战僵尸 - 自动化测试报告</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #2d5016;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        
+        .test-section h2 {
+            color: #2d5016;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .test-item {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: white;
+            border-left: 4px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .test-item.pass {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        
+        .test-item.fail {
+            border-left-color: #dc3545;
+            background: #fff0f0;
+        }
+        
+        .test-item.pending {
+            border-left-color: #ffc107;
+            background: #fffef0;
+        }
+        
+        .status {
+            font-weight: bold;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .status.pass {
+            background: #28a745;
+            color: white;
+        }
+        
+        .status.fail {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .status.pending {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .summary h2 {
+            margin-bottom: 15px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 30px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #138496;
+        }
+        
+        #progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        #progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .instructions {
+            background: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .instructions h3 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 5px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌻 植物大战僵尸 🧟</h1>
+        <p class="subtitle">自动化功能测试报告</p>
+        
+        <div class="instructions">
+            <h3>📋 测试说明</h3>
+            <ol>
+                <li>确保你已经在另一个标签页打开了游戏：<a href="https://plantvs.netlify.app" target="_blank">https://plantvs.netlify.app</a></li>
+                <li>点击下方"开始测试"按钮</li>
+                <li>按照提示在游戏页面中完成各项操作</li>
+                <li>测试完成后查看详细报告</li>
+            </ol>
+        </div>
+        
+        <div class="summary">
+            <h2>测试进度</h2>
+            <div id="progress-bar">
+                <div id="progress-fill">0%</div>
+            </div>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">总测试项</div>
+                    <div class="stat-number" id="total-tests">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">已通过</div>
+                    <div class="stat-number" id="passed-tests">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">未通过</div>
+                    <div class="stat-number" id="failed-tests">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">待测试</div>
+                    <div class="stat-number" id="pending-tests">0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-primary" onclick="startTest()">🚀 开始测试</button>
+            <button class="btn-secondary" onclick="resetTest()">🔄 重置测试</button>
+            <button class="btn-info" onclick="exportReport()">📄 导出报告</button>
+        </div>
+        
+        <div id="test-results"></div>
+    </div>
+    
+    <script>
+        const testSuites = [
+            {
+                title: '1. 页面加载测试',
+                icon: '🌐',
+                tests: [
+                    { id: 'load-page', desc: '访问游戏网址', instruction: '在新标签页打开 https://plantvs.netlify.app' },
+                    { id: 'load-screen', desc: '显示加载屏幕', instruction: '确认看到加载动画和进度条' },
+                    { id: 'load-time', desc: '5秒内完成加载', instruction: '页面在5秒内完全加载' },
+                    { id: 'main-menu', desc: '显示主菜单', instruction: '确认看到主菜单和4个按钮' }
+                ]
+            },
+            {
+                title: '2. 主菜单功能测试',
+                icon: '🎮',
+                tests: [
+                    { id: 'btn-start', desc: '开始游戏按钮', instruction: '点击"开始游戏"进入关卡选择' },
+                    { id: 'btn-rules', desc: '游戏规则按钮', instruction: '点击"游戏规则"查看规则模态框' },
+                    { id: 'btn-almanac', desc: '植物图鉴按钮', instruction: '点击"植物图鉴"查看5种植物' },
+                    { id: 'btn-reset', desc: '重置进度按钮', instruction: '点击"重置进度"显示确认对话框' }
+                ]
+            },
+            {
+                title: '3. 关卡1核心游戏测试',
+                icon: '🎯',
+                tests: [
+                    { id: 'level1-start', desc: '启动关卡1', instruction: '点击关卡1卡片进入游戏' },
+                    { id: 'ui-display', desc: 'UI元素显示', instruction: '确认显示阳光计数器、波次、植物卡片、网格' },
+                    { id: 'sun-drop', desc: '天空掉落阳光', instruction: '等待7秒，点击掉落的阳光' },
+                    { id: 'sun-collect', desc: '阳光收集动画', instruction: '确认阳光飞向左上角，计数器+25' },
+                    { id: 'plant-sunflower', desc: '种植向日葵', instruction: '点击向日葵卡片，再点击网格种植' },
+                    { id: 'sunflower-produce', desc: '向日葵生产阳光', instruction: '等待24秒，确认向日葵生产阳光' },
+                    { id: 'plant-peashooter', desc: '种植豌豆射手', instruction: '收集100阳光，种植豌豆射手' },
+                    { id: 'zombie-spawn', desc: '僵尸生成', instruction: '等待10秒，确认第一波僵尸出现' },
+                    { id: 'pea-shoot', desc: '豌豆射手攻击', instruction: '确认豌豆射手自动射击僵尸' },
+                    { id: 'zombie-damage', desc: '僵尸受伤', instruction: '确认僵尸血量减少' },
+                    { id: 'zombie-death', desc: '僵尸死亡', instruction: '确认僵尸血量归零后消失' },
+                    { id: 'victory', desc: '胜利条件', instruction: '击败所有僵尸后显示胜利画面' },
+                    { id: 'defeat', desc: '失败条件', instruction: '让僵尸到达左边界显示失败画面' }
+                ]
+            },
+            {
+                title: '4. 控制与交互测试',
+                icon: '⌨️',
+                tests: [
+                    { id: 'key-space', desc: '空格键暂停', instruction: '游戏中按空格键暂停游戏' },
+                    { id: 'key-esc', desc: 'ESC键菜单', instruction: '按ESC键打开暂停菜单' },
+                    { id: 'key-r', desc: 'R键重启', instruction: '暂停时按R键重新开始关卡' },
+                    { id: 'pause-resume', desc: '暂停恢复功能', instruction: '确认暂停后可以继续游戏' }
+                ]
+            },
+            {
+                title: '5. 关卡2测试',
+                icon: '💣',
+                tests: [
+                    { id: 'level2-unlock', desc: '关卡2解锁', instruction: '完成关卡1后关卡2解锁' },
+                    { id: 'cherry-bomb', desc: '樱桃炸弹', instruction: '种植樱桃炸弹，1秒后爆炸' },
+                    { id: 'cone-zombie', desc: '路障僵尸', instruction: '确认出现血量更高的路障僵尸' },
+                    { id: 'level2-complete', desc: '完成关卡2', instruction: '击败所有4波僵尸' }
+                ]
+            },
+            {
+                title: '6. 关卡3测试',
+                icon: '❄️',
+                tests: [
+                    { id: 'level3-unlock', desc: '关卡3解锁', instruction: '完成关卡2后关卡3解锁' },
+                    { id: 'snow-pea', desc: '寒冰射手', instruction: '种植寒冰射手，射出蓝色弹丸' },
+                    { id: 'slow-effect', desc: '减速效果', instruction: '确认僵尸被减速50%' },
+                    { id: 'bucket-zombie', desc: '铁桶僵尸', instruction: '确认出现血量1370的铁桶僵尸' },
+                    { id: 'level3-complete', desc: '完成关卡3', instruction: '击败所有5波僵尸' }
+                ]
+            },
+            {
+                title: '7. 进度保存测试',
+                icon: '💾',
+                tests: [
+                    { id: 'save-progress', desc: '进度自动保存', instruction: '完成关卡后进度自动保存' },
+                    { id: 'load-progress', desc: '进度加载', instruction: '刷新页面后进度保持' },
+                    { id: 'reset-progress', desc: '重置进度', instruction: '重置后只有关卡1可用' }
+                ]
+            },
+            {
+                title: '8. 移动端测试',
+                icon: '📱',
+                tests: [
+                    { id: 'mobile-layout', desc: '竖屏布局', instruction: '手机竖屏访问，布局正常' },
+                    { id: 'touch-control', desc: '触摸控制', instruction: '触摸操作响应灵敏' },
+                    { id: 'landscape-warning', desc: '横屏警告', instruction: '横屏时显示提示信息' },
+                    { id: 'button-size', desc: '按钮大小', instruction: '所有按钮≥44x44像素' }
+                ]
+            },
+            {
+                title: '9. 性能测试',
+                icon: '⚡',
+                tests: [
+                    { id: 'fps', desc: '帧率≥30fps', instruction: 'F12查看Performance，确认帧率稳定' },
+                    { id: 'memory', desc: '内存<100MB', instruction: '查看Memory，确认内存使用合理' },
+                    { id: 'load-speed', desc: '加载速度<5s', instruction: '首次加载时间小于5秒' }
+                ]
+            },
+            {
+                title: '10. 浏览器兼容性',
+                icon: '🌍',
+                tests: [
+                    { id: 'chrome', desc: 'Chrome浏览器', instruction: '在Chrome中正常运行' },
+                    { id: 'firefox', desc: 'Firefox浏览器', instruction: '在Firefox中正常运行' },
+                    { id: 'edge', desc: 'Edge浏览器', instruction: '在Edge中正常运行' },
+                    { id: 'safari', desc: 'Safari浏览器', instruction: '在Safari中正常运行（如有）' }
+                ]
+            }
+        ];
+        
+        let currentTest = 0;
+        let testResults = {};
+        
+        function initTests() {
+            testResults = {};
+            testSuites.forEach(suite => {
+                suite.tests.forEach(test => {
+                    testResults[test.id] = 'pending';
+                });
+            });
+            updateStats();
+            renderTests();
+        }
+        
+        function renderTests() {
+            const container = document.getElementById('test-results');
+            container.innerHTML = '';
+            
+            testSuites.forEach(suite => {
+                const section = document.createElement('div');
+                section.className = 'test-section';
+                
+                const title = document.createElement('h2');
+                title.innerHTML = `${suite.icon} ${suite.title}`;
+                section.appendChild(title);
+                
+                suite.tests.forEach(test => {
+                    const item = document.createElement('div');
+                    item.className = `test-item ${testResults[test.id]}`;
+                    item.id = `test-${test.id}`;
+                    
+                    const desc = document.createElement('div');
+                    desc.innerHTML = `
+                        <strong>${test.desc}</strong><br>
+                        <small style="color: #666;">${test.instruction}</small>
+                    `;
+                    
+                    const statusSpan = document.createElement('span');
+                    statusSpan.className = `status ${testResults[test.id]}`;
+                    statusSpan.textContent = testResults[test.id] === 'pass' ? '✅ 通过' : 
+                                           testResults[test.id] === 'fail' ? '❌ 失败' : '⏳ 待测';
+                    
+                    const buttons = document.createElement('div');
+                    buttons.innerHTML = `
+                        <button onclick="markTest('${test.id}', 'pass')" style="padding: 5px 15px; margin: 0 5px; background: #28a745; color: white; border: none; border-radius: 3px; cursor: pointer;">✓ 通过</button>
+                        <button onclick="markTest('${test.id}', 'fail')" style="padding: 5px 15px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">✗ 失败</button>
+                    `;
+                    
+                    item.appendChild(desc);
+                    item.appendChild(buttons);
+                    item.appendChild(statusSpan);
+                    
+                    section.appendChild(item);
+                });
+                
+                container.appendChild(section);
+            });
+        }
+        
+        function markTest(testId, status) {
+            testResults[testId] = status;
+            const item = document.getElementById(`test-${testId}`);
+            item.className = `test-item ${status}`;
+            const statusSpan = item.querySelector('.status');
+            statusSpan.className = `status ${status}`;
+            statusSpan.textContent = status === 'pass' ? '✅ 通过' : '❌ 失败';
+            updateStats();
+        }
+        
+        function updateStats() {
+            const total = Object.keys(testResults).length;
+            const passed = Object.values(testResults).filter(r => r === 'pass').length;
+            const failed = Object.values(testResults).filter(r => r === 'fail').length;
+            const pending = Object.values(testResults).filter(r => r === 'pending').length;
+            
+            document.getElementById('total-tests').textContent = total;
+            document.getElementById('passed-tests').textContent = passed;
+            document.getElementById('failed-tests').textContent = failed;
+            document.getElementById('pending-tests').textContent = pending;
+            
+            const progress = total > 0 ? Math.round((passed + failed) / total * 100) : 0;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('progress-fill').textContent = progress + '%';
+        }
+        
+        function startTest() {
+            if (confirm('确认你已经在另一个标签页打开了 https://plantvs.netlify.app 吗？')) {
+                alert('测试开始！\\n\\n请按照每个测试项的说明进行操作，完成后点击"通过"或"失败"按钮。');
+            } else {
+                window.open('https://plantvs.netlify.app', '_blank');
+                alert('游戏页面已打开，请返回此页面开始测试。');
+            }
+        }
+        
+        function resetTest() {
+            if (confirm('确定要重置所有测试结果吗？')) {
+                initTests();
+            }
+        }
+        
+        function exportReport() {
+            const total = Object.keys(testResults).length;
+            const passed = Object.values(testResults).filter(r => r === 'pass').length;
+            const failed = Object.values(testResults).filter(r => r === 'fail').length;
+            const pending = Object.values(testResults).filter(r => r === 'pending').length;
+            
+            let report = `植物大战僵尸 - 测试报告\\n`;
+            report += `生成时间: ${new Date().toLocaleString('zh-CN')}\\n`;
+            report += `测试网址: https://plantvs.netlify.app\\n\\n`;
+            report += `=== 测试统计 ===\\n`;
+            report += `总测试项: ${total}\\n`;
+            report += `通过: ${passed} (${Math.round(passed/total*100)}%)\\n`;
+            report += `失败: ${failed} (${Math.round(failed/total*100)}%)\\n`;
+            report += `待测: ${pending} (${Math.round(pending/total*100)}%)\\n\\n`;
+            
+            testSuites.forEach(suite => {
+                report += `\\n${suite.icon} ${suite.title}\\n`;
+                report += `${'='.repeat(50)}\\n`;
+                suite.tests.forEach(test => {
+                    const status = testResults[test.id] === 'pass' ? '✅ 通过' :
+                                 testResults[test.id] === 'fail' ? '❌ 失败' : '⏳ 待测';
+                    report += `${status} ${test.desc}\\n`;
+                });
+            });
+            
+            const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `测试报告_${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // 初始化
+        initTests();
+    </script>
+</body>
+</html>
+
