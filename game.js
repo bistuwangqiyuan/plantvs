@@ -137,13 +137,14 @@ class GameEngine {
     }
     
     update(deltaTime) {
-        // Check for auto-pause (5 seconds of no input)
-        if (Date.now() - this.lastInputTime > GAME_CONSTANTS.IDLE_PAUSE_TIME) {
-            this.pause();
-            showTooltip('游戏已暂停，点击继续');
-            this.lastInputTime = Date.now();  // Reset to avoid constant pausing
-            return;
-        }
+        // Check for auto-pause (disabled for better gameplay experience)
+        // Auto-pause disabled - players can manually pause with button or ESC key
+        // if (Date.now() - this.lastInputTime > GAME_CONSTANTS.IDLE_PAUSE_TIME) {
+        //     this.pause();
+        //     showTooltip('游戏已暂停，点击继续');
+        //     this.lastInputTime = Date.now();  // Reset to avoid constant pausing
+        //     return;
+        // }
         
         // Update elapsed time
         this.gameState.elapsedTime += deltaTime / 1000;
@@ -964,7 +965,8 @@ class Renderer {
         this.ctx.strokeRect(waveX, 10, 120, 40);
         
         this.ctx.fillStyle = '#000';
-        this.ctx.fillText(`第${gameState.wave}波/共${gameState.totalWaves}波`, waveX + 60, 30);
+        const displayWave = Math.max(1, gameState.wave);  // Display starts from 1, not 0
+        this.ctx.fillText(`第${displayWave}波/共${gameState.totalWaves}波`, waveX + 60, 30);
         
         this.ctx.restore();
     }

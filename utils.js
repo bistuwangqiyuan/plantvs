@@ -81,7 +81,7 @@ const GAME_CONSTANTS = {
     MIN_TOUCH_TARGET: 44,  // Minimum 44x44px for touch targets
     
     // Auto-pause
-    IDLE_PAUSE_TIME: 5000,  // 5 seconds of no input triggers pause
+    IDLE_PAUSE_TIME: 300000,  // 300 seconds (5 minutes) of no input triggers pause
     
     // Plant Card UI
     PLANT_CARD_WIDTH: 70,
